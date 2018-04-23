@@ -1,9 +1,11 @@
 {
-  "name": "Restaurant-Reviews",
+  "name": "restaurant-reviews",
   "private": true,
-  "version": "0.0.0",
-  "description": "a Sails application",
-  "keywords": [],
+  "version": "1.0.0",
+  "description": "udacity google mobile web specialist nanodegree project final part",
+  "keywords": [
+    "udacity", "mobile web", "google", "nanodegree", "html", "css", "javascript", "node"
+  ],
   "dependencies": {
     "include-all": "^1.0.0",
     "rc": "1.0.1",
@@ -19,7 +21,7 @@
     "type": "git",
     "url": "git://github.com/brandy/Restaurant-Reviews.git"
   },
-  "author": "Brandy Lee Camacho",
-  "linkedIn": "https://www.linkedin.com/in/brandycamacho/",
-  "email": "brandy@udacity.com"
+  "author": "Mohammad RAHMAT",
+  "linkedIn": "https://www.linkedin.com/in/mohammad-rahmat-153b67a6/",
+  "email": "mrahmat_public@hotmail.com"
 }
