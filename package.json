@@ -9,6 +9,7 @@
     "express": "^4.16.3",
     "include-all": "^1.0.0",
     "rc": "1.0.1",
+    "request": "^2.86.0",
     "sails": "^0.12.13",
     "sails-disk": "~0.10.9"
   },
