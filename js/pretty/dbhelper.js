@@ -294,7 +294,7 @@ class DBHelper {
      * @param {*} restaurant 
      */
     static urlForRestaurant(restaurant) {
-        return `./restaurant.html?id==${restaurant.id}`;
+        return `./restaurant.html?id=${restaurant.id}`;
     }
 
     static imageUrlForRestaurant(restaurant) {

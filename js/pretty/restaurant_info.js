@@ -12,6 +12,7 @@ if (navigator.serviceWorker) {
  * Initialize Google map, called from HTML.
  */
 initMap = (restaurant) => {
+    debugger;
     self.restaurant = restaurant;
     self.map = new google.maps.Map(document.getElementById('map'), {
         zoom: 16,
@@ -27,6 +28,7 @@ window.renderPage = () => {
     if (self.restaurant) {
         return;
     }
+    debugger;
     DBHelper.fetchRestaurantById(DBHelper.getParameterByName('id'))
         .then(restaurant => initMap(restaurant));
 }
