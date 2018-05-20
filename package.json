@@ -1,12 +1,12 @@
 {
-  "name": "restaurant-reviews",
+  "name": "Restaurant-Reviews",
   "private": true,
-  "version": "1.0.0",
-  "description": "udacity google mobile web specialist nanodegree project final part",
-  "keywords": [
-    "udacity", "mobile web", "google", "nanodegree", "html", "css", "javascript", "node"
-  ],
+  "version": "0.0.0",
+  "description": "a Sails application",
+  "keywords": [],
   "dependencies": {
+    "child_process": "^1.0.2",
+    "express": "^4.16.3",
     "include-all": "^1.0.0",
     "rc": "1.0.1",
     "sails": "^0.12.13",
@@ -21,7 +21,17 @@
     "type": "git",
     "url": "git://github.com/brandy/Restaurant-Reviews.git"
   },
-  "author": "Mohammad RAHMAT",
-  "linkedIn": "https://www.linkedin.com/in/mohammad-rahmat-153b67a6/",
-  "email": "mrahmat_public@hotmail.com"
+  "author": "Brandy Lee Camacho",
+  "linkedIn": "https://www.linkedin.com/in/brandycamacho/",
+  "email": "brandy@udacity.com",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^7.0.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-cssnano": "^2.1.3",
+    "gulp-uglify": "^3.0.0",
+    "gulp-uglifyes": "^0.1.3",
+    "gulp-webp": "^3.0.0"
+  }
 }

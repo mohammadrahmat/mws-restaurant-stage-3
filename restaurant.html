@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <base href="/" />
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui" />
+  <meta name="robots" content="all" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="img/icons/png" href="favicon.png" />
+
+  <link rel="preconnect" href="https://maps.googleapis.com/" crossorigin />
+  <link rel="preconnect" href="https://maps.gstatic.com/" crossorigin />
+  <link rel="preconnect" href="https://maps.googleapis.com/maps/api/js?key=AIzaSyBk7CxDwpD8d90DtYtBc5bqpCPYWO8RwdE&callback=initMap"
+    crossorigin />
+
+  <link rel="preload" href="http://localhost:1337/restaurants/" as="fetch" />
+
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta http-equiv="cleartype" content="on" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="apple-touch-fullscreen" content="yes" />
+
+  <link rel="apple-touch-icon" sizes="57x57" href="img/icons/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="img/icons/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="img/icons/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="img/icons/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="img/icons/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="img/icons/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="img/icons/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="img/icons/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="img/icons/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="img/icons/android-icon-512x512.png">
+  <link rel="icon" type="image/png" sizes="256x256" href="img/icons/android-icon-256x256.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="img/icons/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="img/icons/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="img/icons/favicon-16x16.png">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="msapplication-TileColor" content="#fdfdfd">
+  <meta name="msapplication-TileImage" content="/img/icons/ms-icon-144x144.png">
+  <meta name="theme-color" content="#fdfdfd">
+
+  <title>Restaurant Reviews</title>
+  <meta name="description" content="RESTAURANT REVIEWS APP" />
+  <meta name="application-name" content="RESTAURANT REVIEWS APP" />
+  <meta name="msapplication-tooltip" content="RESTAURANT REVIEWS APP" />
+  <meta name="apple-mobile-web-app-title" content="RESTAURANT REVIEWS APP" />
+  <meta name="theme-color" content="#2980b9" />
+
+  <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
+  <link rel="stylesheet" href="css/ugly/styles.css" />
+</head>
+
+<body class="inside">
+  <!-- Beginning header -->
+  <header role="banner">
+    <!-- Beginning nav -->
+    <nav>
+      <h1><a href="/">Restaurant Reviews</a></h1>
+    </nav>
+    <!-- Beginning breadcrumb -->
+    <ul id="breadcrumb" role="navigation" aria-label="Restaurant breadcrumb">
+      <li><a href="/" role="link" aria-label="go back to home page">Home</a></li>
+    </ul>
+    <!-- End breadcrumb -->
+    <!-- End nav -->
+  </header>
+  <!-- End header -->
+
+  <!-- Beginning main -->
+  <main id="maincontent" class="reviews" role="main">
+    <!-- Beginning map -->
+    <section id="map-container">
+      <div id="map" role="application" aria-label="Google map for restaurant location"></div>
+    </section>
+    <!-- End map -->
+    <!-- Beginning restaurant -->
+    <section id="restaurant-container">
+      <div id="restaurant-info" aria-label="restaurant information container">
+          <h2 id="restaurant-name" aria-label="restaurant name"></h1>
+          <img id="restaurant-img">
+          <p id="restaurant-cuisine" aria-label="cuisine type"></p>
+          <p id="restaurant-address" aria-label="address"></p>
+      </div>
+      <div class="restaurant-hours" aria-label="restaurant working hours container">
+          <table id="restaurant-hours" aria-label="Restaurant Hours"></table>
+      </div>
+    </section>
+    <!-- end restaurant -->
+    <!-- Beginning reviews -->
+    <section id="reviews-container">
+      <ul id="reviews-list" aria-label="Reviews list"></ul>
+    </section>
+    <!-- End reviews -->
+  </main>
+  <!-- End main -->
+
+  <!-- Beginning footer -->
+  <footer id="footer" role="contentinfo">
+    Copyright (c) 2017 <a href="/" role="link"><strong>Restaurant Reviews</strong></a> All Rights Reserved.
+  </footer>
+  <!-- End footer -->
+
+  <script type="application/javascript" charset="utf-8" src="js/ugly/dbhelper.js"></script>
+  <script type="application/javascript" charset="utf-8" src="js/ugly/restaurant_info.js"></script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBk7CxDwpD8d90DtYtBc5bqpCPYWO8RwdE&libraries=places&callback=initMap"></script>
+
+</body>
+
+</html>
