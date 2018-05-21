@@ -396,7 +396,7 @@ class DBHelper {
             method: 'post',
             body: JSON.stringify({
                 name: review.name,
-                rating: review.rating,
+                rating: parseInt(review.rating),
                 comments: review.comment,
                 createdAt: +new Date(),
                 updatedAt: +new Date(),
