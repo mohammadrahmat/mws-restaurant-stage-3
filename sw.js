@@ -21,7 +21,8 @@ const thingsToCache = [
 	'./img/rest_images/8.webp',
 	'./img/rest_images/9.webp',
 	'./img/rest_images/10.webp',
-	'./img/rest_images/no_image.webp'
+	'./img/rest_images/no_image.webp',
+	'.img/staticmap.webp'
 ];
 
 self.addEventListener('install', event => {

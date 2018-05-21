@@ -398,6 +398,8 @@ class DBHelper {
                 name: review.name,
                 rating: review.rating,
                 comments: review.comment,
+                createdAt: +new Date(),
+                updatedAt: +new Date(),
                 restaurant_id: rid
             })
         })
