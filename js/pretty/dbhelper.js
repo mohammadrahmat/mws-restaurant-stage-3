@@ -367,7 +367,7 @@ class DBHelper {
      * @param {*} is_favorite 
      */
     static favoriteRestaurant(restaurant_id, isFavorite) {
-        if(!isFavorite) {
+        if (!isFavorite) {
             isFavorite = false;
         }
         fetch(this.getRestaurantByIdApiUrl(restaurant_id), {
@@ -376,14 +376,14 @@ class DBHelper {
                 is_favorite: !isFavorite
             })
         })
-        .then(resp => resp.json())
-        .then(rest => {
-            let favButton = document.getElementById(`${rest.id}`);
-            favButton.href = `javascript:DBHelper.favoriteRestaurant(${rest.id}, ${rest.is_favorite})`;
-            favButton.innerHTML = rest.is_favorite ? 'Remove Favorite' : 'Set Favorite';
-            DBHelper.cacheObject(rest, DBHelper.RESTAURANT_IDB_NAME, DBHelper.RESTAURANT_IDB_STORE_NAME);
-        })
-        .catch(err => console.error(`ERROR_UPDATING_FAVOURITE_RESTAURANT: ${err}`));
+            .then(resp => resp.json())
+            .then(rest => {
+                let favButton = document.getElementById(`${rest.id}`);
+                favButton.href = `javascript:DBHelper.favoriteRestaurant(${rest.id}, ${rest.is_favorite})`;
+                favButton.innerHTML = rest.is_favorite ? 'Remove Favorite' : 'Set Favorite';
+                DBHelper.cacheObject(rest, DBHelper.RESTAURANT_IDB_NAME, DBHelper.RESTAURANT_IDB_STORE_NAME);
+            })
+            .catch(err => console.error(`ERROR_UPDATING_FAVOURITE_RESTAURANT: ${err}`));
     }
 
     /**
@@ -392,19 +392,20 @@ class DBHelper {
      * @param {*} rid 
      */
     static postReview(review, rid) {
-        fetch(DBHelper.REVIEWS_API, {
+        return fetch(DBHelper.REVIEWS_API, {
             method: 'post',
             body: JSON.stringify({
                 name: review.name,
                 rating: review.rating,
-                comments: review.comments,
+                comments: review.comment,
                 restaurant_id: rid
             })
         })
-        .then(resp => resp.json())
-        .then(rev => {
-            return DBHelper.cacheObject(rev.review, DBHelper.REVIEWS_IDB_NAME, DBHelper.REVIEWS_IDB_STORE_NAME);
-        })
-        .catch(err => console.error(`ERROR_POSTING_REVIEW: ${err}`));
+            .then(resp => resp.json())
+            .then(rev => {
+                DBHelper.cacheObject(rev, DBHelper.REVIEWS_IDB_NAME, DBHelper.REVIEWS_IDB_STORE_NAME);
+                return rev;
+            })
+            .catch(err => console.error(`ERROR_POSTING_REVIEW: ${err}`));
     }
 }

@@ -108,6 +108,7 @@ nav h1 a {
   height: 400px;
   width: 100%;
   background-color: #ccc;
+  background-image: url('/img/staticmap.webp');
 }
 /* ====================== Restaurant Filtering ====================== */
 .filter-options {
@@ -250,6 +251,38 @@ nav h1 a {
   text-align: center;
   margin: 0.5em;
 }
+#reviews-container label {
+  margin-top: 5%;
+  padding: 6px 0;
+  font-size: 2vw;
+  display: none;
+  font-weight: 250;
+}
+#reviews-container .input-container {
+  width: 75%;
+  margin : 0 auto;
+}
+#reviews-container input, number, textarea {
+  width: 100%;
+  margin-top: 2%;
+  padding: 6px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+#reviews-container textarea {
+  height: 4em;
+}
+#reviews-container button {
+  background-color: #333;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  float: right;
+  width: 25%;
+  margin: 2%;
+}
 #reviews-container h4 {
   text-align: center;
   color: #444;
@@ -333,6 +366,13 @@ nav h1 a {
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+  #reviews-container .input-container {
+    display: grid;
+    grid-template-columns: 20% 80%;
+  }
+  #reviews-container label {
+    display: block;
   }
 }
 

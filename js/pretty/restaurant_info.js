@@ -88,9 +88,9 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
  */
 fillReviewsHTML = (reviews = self.restaurant.reviews) => {
     const container = document.getElementById('reviews-container');
-    const title = document.createElement('h3');
-    title.innerHTML = 'Reviews';
-    container.appendChild(title);
+    // const title = document.createElement('h3');
+    // title.innerHTML = 'Reviews';
+    // container.appendChild(title);
 
     if (!reviews) {
         const noReviews = document.createElement('p');
@@ -103,6 +103,16 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
         ul.appendChild(createReviewHTML(review));
     });
     container.appendChild(ul);
+}
+
+/**
+ * Add new review
+ */
+addReviewHTML = (review, reviews = self.restaurant.reviews) => {
+    const container = document.getElementById('reviews-container');
+    const ul = document.getElementById('reviews-list');
+    ul.prepend(createReviewHTML(review));
+    container.append(ul);
 }
 
 /**
@@ -137,4 +147,25 @@ fillBreadcrumb = (restaurant = self.restaurant) => {
     const li = document.createElement('li');
     li.innerHTML = restaurant.name;
     breadcrumb.appendChild(li);
+}
+
+/**
+ * review form submit handler
+ */
+reviewFormHandler = (restaurant = self.restaurant) => {
+    let review = {};
+    review.name = document.getElementById('username').value;
+    review.rating = document.getElementById('rating').value;
+    review.comment = document.getElementById('comment').value;
+
+    DBHelper.postReview(review, restaurant.id)
+        .then(resp => {
+            if (!resp) {
+                document.getElementById('form-legend').innerHTML = 'An Unexpected Error Occured, Please Try Again Later.';
+            } else {
+                document.getElementById('form-legend').innerHTML = 'Your Review Has Been Saved, Thank You For Sharing Your Thoughts.';
+                addReviewHTML(resp);
+            }
+        })
+        .catch(err => console.error(`ERROR_SAVING_REVIEW: ${err}`));
 }
