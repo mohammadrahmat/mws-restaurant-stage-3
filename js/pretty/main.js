@@ -135,11 +135,24 @@ createRestaurantHTML = (restaurant) => {
     address.innerHTML = restaurant.address;
     li.append(address);
 
-    const more = document.createElement('a');
-    more.innerHTML = 'View Details';
-    more.href = DBHelper.urlForRestaurant(restaurant);
+    const buttonsDiv = document.createElement('div');
+    buttonsDiv.className = 'buttons-div';
 
-    li.append(more);
+    const favorite = document.createElement('a');
+    const isFavorite = restaurant.is_favorite;
+    favorite.innerHTML = isFavorite ? 'Remove Favorite' : 'Set Favorite';
+    favorite.className = 'favorite-button';
+    favorite.id = `${restaurant.id}`;
+    favorite.href = `javascript:DBHelper.favoriteRestaurant(${restaurant.id}, ${isFavorite})`;
+    buttonsDiv.append(favorite);
+
+    const more = document.createElement('a');
+    more.innerHTML = 'Details..';
+    more.className = 'more-button';
+    more.href = DBHelper.urlForRestaurant(restaurant);
+    buttonsDiv.append(more);
+
+    li.append(buttonsDiv);
 
     return li;
 }

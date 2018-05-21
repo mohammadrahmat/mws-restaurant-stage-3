@@ -168,6 +168,9 @@ nav h1 a {
   width: 100%;
   min-height: 248px;
 }
+#restaurants-list .restaurant-img:hover {
+  opacity: 0.5;
+}
 #restaurants-list li h2 {
   color: #ddd;
   background-color: #333;
@@ -179,15 +182,24 @@ nav h1 a {
   height: 5ex;
   line-height: 2.5ex;
 }
-#restaurants-list li a {
-  background-color: orange;
+#restaurants-list .buttons-div {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto auto;
+}
+#restaurants-list a {
   color: #fff;
-  display: inline-block;
-  font-size: 10pt;
   padding: 8px 30px 10px;
   text-align: center;
   text-decoration: none;
   text-transform: uppercase;
+  font-size: 10pt;
+}
+#restaurants-list .favorite-button {
+  background-color: #3397DB;
+}
+#restaurants-list .more-button {
+  background-color: #333;
 }
 
 /* ====================== Restaurant Details ====================== */

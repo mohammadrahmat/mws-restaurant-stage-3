@@ -248,6 +248,40 @@ class DBHelper {
     }
 
     /**
+     * cache single object
+     * @param {*} object 
+     * @param {*} dbName 
+     * @param {*} storeName 
+     */
+    static cacheObject(object, dbName, storeName) {
+        const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkiteIndexedDB || window.msIndexedDB || window.shimIndexedDB;
+
+        let idb = indexedDB.open(dbName, 1);
+
+        idb.onupgradeneeded = function () {
+            let db = idb.result;
+            let store = db.createObjectStore(storeName, { keyPath: "id" });
+            let index = store.createIndex("by-id", "id");
+        };
+
+        idb.onerror = function (err) {
+            console.error(`IndexedDB error: ${err.target.errorCode}`);
+        };
+
+        idb.onsuccess = function () {
+            let db = idb.result;
+            let tx = db.transaction(storeName, "readwrite");
+            let store = tx.objectStore(storeName);
+            let index = store.index("by-id");
+            store.put(object);
+
+            tx.oncomplete = function () {
+                db.close();
+            };
+        };
+    }
+
+    /**
      * Fetch cached data from IndexDB
      */
     static getCachedData(dbName, storeName) {
@@ -297,6 +331,10 @@ class DBHelper {
         return `./restaurant.html?id=${restaurant.id}`;
     }
 
+    /**
+     * Url for Restaurant Image
+     * @param {*} restaurant 
+     */
     static imageUrlForRestaurant(restaurant) {
         if (typeof (restaurant) == 'undefined') {
             return (`/img/rest_images/no_image.webp`);
@@ -304,11 +342,69 @@ class DBHelper {
         return (`/img/rest_images/${restaurant.photograph}.webp`);
     }
 
+    /**
+     * Lazy Load for images
+     */
     static lazyLoad() {
         if (typeof LazyLoad !== 'undefined') {
             new LazyLoad({
                 elements_selector: '.restaurant-img'
             });
         }
+    }
+
+    /**
+     * URL for restaurant API
+     * @param {} id 
+     */
+    static getRestaurantByIdApiUrl(id) {
+        return `http://localhost:${DBHelper.PORT}/restaurants/${id}`;
+    }
+
+    /**
+     * Set/Unset Restaurant favorite
+     * @param {*} restaurant 
+     * @param {*} is_favorite 
+     */
+    static favoriteRestaurant(restaurant_id, isFavorite) {
+        if(!isFavorite) {
+            isFavorite = false;
+        }
+        fetch(this.getRestaurantByIdApiUrl(restaurant_id), {
+            method: 'put',
+            body: JSON.stringify({
+                is_favorite: !isFavorite
+            })
+        })
+        .then(resp => resp.json())
+        .then(rest => {
+            let favButton = document.getElementById(`${rest.id}`);
+            favButton.href = `javascript:DBHelper.favoriteRestaurant(${rest.id}, ${rest.is_favorite})`;
+            favButton.innerHTML = rest.is_favorite ? 'Remove Favorite' : 'Set Favorite';
+            DBHelper.cacheObject(rest, DBHelper.RESTAURANT_IDB_NAME, DBHelper.RESTAURANT_IDB_STORE_NAME);
+        })
+        .catch(err => console.error(`ERROR_UPDATING_FAVOURITE_RESTAURANT: ${err}`));
+    }
+
+    /**
+     * Post Review
+     * @param {*} review 
+     * @param {*} rid 
+     */
+    static postReview(review, rid) {
+        fetch(DBHelper.REVIEWS_API, {
+            method: 'post',
+            body: JSON.stringify({
+                name: review.name,
+                rating: review.rating,
+                comments: review.comments,
+                restaurant_id: rid
+            })
+        })
+        .then(resp => resp.json())
+        .then(rev => {
+            return DBHelper.cacheObject(rev.review, DBHelper.REVIEWS_IDB_NAME, DBHelper.REVIEWS_IDB_STORE_NAME);
+        })
+        .catch(err => console.error(`ERROR_POSTING_REVIEW: ${err}`));
     }
 }
