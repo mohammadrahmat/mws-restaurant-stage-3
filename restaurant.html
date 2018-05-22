@@ -7,6 +7,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui" />
   <meta name="robots" content="all" />
+  <meta http-equiv="Cache-control" content="max-age=31536000">
 
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" type="img/icons/png" href="favicon.png" />
@@ -16,7 +17,7 @@
   <link rel="preconnect" href="https://maps.googleapis.com/maps/api/js?key=AIzaSyBk7CxDwpD8d90DtYtBc5bqpCPYWO8RwdE&callback=initMap"
     crossorigin />
 
-  <link rel="preload" href="http://localhost:1337/restaurants/" as="fetch" />
+  <link rel="preload" href="img/staticmap.webp" as="image" />
 
   <meta name="mobile-web-app-capable" content="yes" />
   <meta http-equiv="cleartype" content="on" />
@@ -54,7 +55,7 @@
   <meta name="theme-color" content="#2980b9" />
 
   <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
-  <link rel="stylesheet" href="css/ugly/styles.css" />
+  <link rel="preload" as="style" href="css/ugly/styles.css" onload="this.rel='stylesheet'">
 </head>
 
 <body class="inside">
