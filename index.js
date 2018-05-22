@@ -30,6 +30,13 @@ function runScript(scriptPath, callback) {
 runScript('app.js', function (err) {
     if (err) throw err;
     app.use(express.static(__dirname + '/'));
+    app.use(function (req, res, next) {
+        if (req.secure) {
+            next();
+        } else {
+            res.redirect('https://' + req.headers.host + req.url);
+        }
+    });
     var server = app.listen(8000, function () {
         console.log('Listening on port %d', server.address().port);
     });
