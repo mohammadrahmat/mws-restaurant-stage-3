@@ -12,6 +12,21 @@ window.addEventListener('load', (event) => {
             .then(reg => console.log(`sw registered, scope: ${reg.scope}`))
             .catch(err => console.error(`ERROR_REGISTERING_SW: ${err}`));
     }
+
+    connectionStatusHandler = (event) => {
+        const statusBox = document.getElementById('offline-status-box');
+        if (!navigator.onLine) {
+            statusBox.style.display = 'block';
+            document.getElementById('offline-status').innerHTML = 'Seems like you are offline. Some data might not be latest.';
+        } else {
+            statusBox.style.display = 'none';
+            document.getElementById('offline-status').innerHTML = 'Online :)';
+            DBHelper.postCachedReviews();
+        }
+    }
+
+    window.addEventListener('online', connectionStatusHandler);
+    window.addEventListener('offline', connectionStatusHandler);
 });
 
 /**
@@ -159,20 +174,27 @@ fillBreadcrumb = (restaurant = self.restaurant) => {
  * review form submit handler
  */
 reviewFormHandler = (restaurant = self.restaurant) => {
-    let review = {};
-    review.name = document.getElementById('username').value;
-    review.rating = document.getElementById('rating').value;
-    review.comment = document.getElementById('comment').value;
-
-    DBHelper.postReview(review, restaurant.id)
-        .then(resp => {
-            if (!resp) {
-                document.getElementById('form-legend').innerHTML = 'An Unexpected Error Occured, Please Try Again Later.';
-            } else {
-                document.getElementById('form-legend').innerHTML = 'Your Review Has Been Saved, Thank You For Sharing Your Thoughts.';
-                document.getElementById('reviews-form').reset();
-                addReviewHTML(resp);
-            }
-        })
-        .catch(err => console.error(`ERROR_SAVING_REVIEW: ${err}`));
+    const review = {
+        name: document.getElementById('username').value,
+        rating: parseInt(document.getElementById('rating').value),
+        comments: document.getElementById('comment').value,
+        createdAt: +new Date(),
+        updatedAt: +new Date(),
+        restaurant_id: restaurant.id
+    };
+    if (navigator.onLine) {
+        DBHelper.postReview(review)
+            .then(resp => {
+                if (!resp) {
+                    document.getElementById('form-legend').innerHTML = 'An Unexpected Error Occured, Please Try Again Later.';
+                } else {
+                    document.getElementById('form-legend').innerHTML = 'Your Review Has Been Saved, Thank You For Sharing Your Thoughts.';
+                    document.getElementById('reviews-form').reset();
+                    addReviewHTML(resp);
+                }
+            })
+            .catch(err => console.error(`ERROR_SAVING_REVIEW: ${err}`));
+    } else {
+        DBHelper.cacheObject(review, DBHelper.REVIEWS_OFFLINE_IDB_NAME, DBHelper.REVIEWS_OFFLINE_STORE_NAME);
+    }
 }

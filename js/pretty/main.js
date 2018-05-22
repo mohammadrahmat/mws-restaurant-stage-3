@@ -24,6 +24,20 @@ window.addEventListener('load', (event) => {
             .then(reg => console.log(`sw registered, scope: ${reg.scope}`))
             .catch(err => console.error(`ERROR_REGISTERING_SW: ${err}`));
     }
+
+    connectionStatusHandler = (event) => {
+        const statusBox = document.getElementById('offline-status-box');
+        if (!navigator.onLine) {
+            statusBox.style.display = 'block';
+            document.getElementById('offline-status').innerHTML = 'Seems like you are offline. Some data might not be latest.';
+        } else {
+            statusBox.style.display = 'none';
+            document.getElementById('offline-status').innerHTML = 'Online :)';
+        }
+    }
+
+    window.addEventListener('online', connectionStatusHandler);
+    window.addEventListener('offline', connectionStatusHandler);
 });
 
 /**

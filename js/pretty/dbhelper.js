@@ -60,6 +60,20 @@ class DBHelper {
     }
 
     /**
+     * Offline review cache DB Name
+     */
+    static get REVIEWS_OFFLINE_IDB_NAME() {
+        return `OfflineReviewsCacheDB`;
+    }
+
+    /**
+     * Offline review cache store name
+     */
+    static get REVIEWS_OFFLINE_STORE_NAME() {
+        return `OfflineReviewsCacheStoore`;
+    }
+
+    /**
      * GET Query String From URL
      * @param {*} name 
      * @param {*} url 
@@ -307,6 +321,27 @@ class DBHelper {
     }
 
     /**
+     * clear unused idb store
+     * @param {*} dbName 
+     * @param {*} storeName 
+     */
+    static clearStore(dbName, storeName) {
+        const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkiteIndexedDB || window.msIndexedDB || window.shimIndexedDB;
+        let idb = indexedDB.open(dbName, 1);
+
+        idb.onsuccess = () => {
+            let db = idb.result;
+            let tx = db.transaction(storeName, "readwrite");
+            let store = tx.objectStore(storeName);
+            store.clear();
+        }
+
+        tx.oncomplete = () => {
+            db.close();
+        }
+    }
+
+    /**
      * Place marker on map
      * @param {*} restaurant 
      * @param {*} map 
@@ -389,28 +424,39 @@ class DBHelper {
     /**
      * Post Review
      * @param {*} review 
-     * @param {*} rid 
      */
-    static postReview(review, rid) {
+    static postReview(review) {
+
         return fetch(DBHelper.REVIEWS_API, {
             method: 'post',
-            body: JSON.stringify({
-                name: review.name,
-                rating: parseInt(review.rating),
-                comments: review.comment,
-                createdAt: +new Date(),
-                updatedAt: +new Date(),
-                restaurant_id: rid
-            })
+            body: JSON.stringify(review)
         })
             .then(resp => resp.json())
             .then(rev => {
                 DBHelper.cacheObject(rev, DBHelper.REVIEWS_IDB_NAME, DBHelper.REVIEWS_IDB_STORE_NAME);
                 return rev;
             })
-            .catch(err => {
-                console.error(`ERROR_POSTING_REVIEW: ${err}`);
-                //TODO: manage offline posting
-            });
+            .catch(err => console.error(`ERROR_POSTING_REVIEW: ${err}`));
+    }
+
+    /**
+     * save cached reviews
+     */
+    static postCachedReviews() {
+
+        if (!navigator.onLine) {
+            return;
+        }
+
+        return DBHelper.getCachedData(DBHelper.REVIEWS_OFFLINE_IDB_NAME, DBHelper.REVIEWS_OFFLINE_STORE_NAME)
+            .then(resp => resp.json())
+            .then(reviews => {
+                reviews.forEach(review => {
+                    DBHelper.postReview(review)
+                        .then(rev => console.log(`SAVED_REVIEW: ${rev}`));
+                })
+            })
+            .then(() => DBHelper.clearStore(DBHelper.REVIEWS_OFFLINE_IDB_NAME, DBHelper.REVIEWS_OFFLINE_STORE_NAME))
+            .catch(err => console.error(`ERROR_SAVING_CACHED_REVIEWS: ${err}`));
     }
 }

@@ -43,6 +43,19 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   min-height: 100%;
   width: 100%;
 }
+#offline-status-box {
+  display: none;
+  background-color: #f44336;
+  font-size: 8pt;
+  letter-spacing: 1px;
+  padding: 1em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+#offline-status-box p {
+  color: #ffeb3b;
+}
 #footer {
   background-color: #444;
   color: #aaa;
