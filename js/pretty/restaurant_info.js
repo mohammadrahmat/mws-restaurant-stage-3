@@ -3,10 +3,16 @@
 let restaurant;
 var map;
 
-if (navigator.serviceWorker) {
-    navigator.serviceWorker.register('sw.js');
-    console.log('sw registered');
-}
+/**
+ * Register sw on load
+ */
+window.addEventListener('load', (event) => {
+    if (navigator.serviceWorker) {
+        navigator.serviceWorker.register('sw.js')
+            .then(reg => console.log(`sw registered, scope: ${reg.scope}`))
+            .catch(err => console.error(`ERROR_REGISTERING_SW: ${err}`));
+    }
+});
 
 /**
  * Initialize Google map, called from HTML.
@@ -164,6 +170,7 @@ reviewFormHandler = (restaurant = self.restaurant) => {
                 document.getElementById('form-legend').innerHTML = 'An Unexpected Error Occured, Please Try Again Later.';
             } else {
                 document.getElementById('form-legend').innerHTML = 'Your Review Has Been Saved, Thank You For Sharing Your Thoughts.';
+                document.getElementById('reviews-form').reset();
                 addReviewHTML(resp);
             }
         })

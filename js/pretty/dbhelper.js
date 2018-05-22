@@ -408,6 +408,9 @@ class DBHelper {
                 DBHelper.cacheObject(rev, DBHelper.REVIEWS_IDB_NAME, DBHelper.REVIEWS_IDB_STORE_NAME);
                 return rev;
             })
-            .catch(err => console.error(`ERROR_POSTING_REVIEW: ${err}`));
+            .catch(err => {
+                console.error(`ERROR_POSTING_REVIEW: ${err}`);
+                //TODO: manage offline posting
+            });
     }
 }

@@ -8,15 +8,22 @@ var markers = []
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
-    if (navigator.serviceWorker) {
-        navigator.serviceWorker.register('sw.js');
-        console.log('sw registered');
-    }
     DBHelper.fetchNeighborhoods()
         .then(neighborhoods => fillNeighborhoodsHTML(neighborhoods));
 
     DBHelper.fetchCuisines()
         .then(cuisines => fillCuisinesHTML(cuisines));
+});
+
+/**
+ * Register sw on load
+ */
+window.addEventListener('load', (event) => {
+    if (navigator.serviceWorker) {
+        navigator.serviceWorker.register('sw.js')
+            .then(reg => console.log(`sw registered, scope: ${reg.scope}`))
+            .catch(err => console.error(`ERROR_REGISTERING_SW: ${err}`));
+    }
 });
 
 /**
@@ -147,7 +154,7 @@ createRestaurantHTML = (restaurant) => {
     buttonsDiv.append(favorite);
 
     const more = document.createElement('a');
-    more.innerHTML = 'Details..';
+    more.innerHTML = 'View Details';
     more.className = 'more-button';
     more.href = DBHelper.urlForRestaurant(restaurant);
     buttonsDiv.append(more);
