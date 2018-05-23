@@ -3,15 +3,22 @@
 let restaurant;
 var map;
 
-/**
- * Register sw on load
- */
-window.addEventListener('load', (event) => {
+window.addEventListener('DOMContentLoaded', (event) => {
     if (navigator.serviceWorker) {
         navigator.serviceWorker.register('sw.js')
             .then(reg => console.log(`sw registered, scope: ${reg.scope}`))
             .catch(err => console.error(`ERROR_REGISTERING_SW: ${err}`));
     }
+    if (!navigator.onLine) {
+        DBHelper.fetchRestaurantById(DBHelper.getParameterByName('id'))
+            .then(restaurant => initMap(restaurant));
+    }
+})
+
+/**
+ * Register sw on load
+ */
+window.addEventListener('load', (event) => {
 
     connectionStatusHandler = (event) => {
         const statusBox = document.getElementById('offline-status-box');
@@ -34,13 +41,15 @@ window.addEventListener('load', (event) => {
  */
 initMap = (restaurant) => {
     self.restaurant = restaurant;
-    self.map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 16,
-        center: self.restaurant.latlng,
-        scrollwheel: false
-    });
+    if (navigator.onLine) {
+        self.map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 16,
+            center: self.restaurant.latlng,
+            scrollwheel: false
+        });
+        DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
+    }
     fillBreadcrumb();
-    DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
     fillRestaurantHTML();
 }
 

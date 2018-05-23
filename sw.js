@@ -31,9 +31,7 @@ self.addEventListener('install', event => {
 	event.waitUntil(
 		caches.open(staticCacheName)
 			.then(cache => cache.addAll(thingsToCache))
-			.catch(err => {
-				console.error(`ERROR_INSTALLING_SW: ${err.message}`);
-			})
+			.catch(err => console.error(`ERROR_INSTALLING_SW: ${err}`))
 	);
 });
 
@@ -72,8 +70,7 @@ self.addEventListener('fetch', event => {
 							return response;
 						});
 				})
-				.catch(err => console.error(`ERROR_FETCHING_SW: MSG: ${err}`, `ERROR_FETCHING_SW: REQUEST: ${event.request}`))
+				.catch(err => console.warn(`ERR_FETCHING_SW_ITEM: ${event.request.url}`))
 		);
 	}
-
 });

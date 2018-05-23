@@ -8,22 +8,27 @@ var markers = []
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
-    DBHelper.fetchNeighborhoods()
-        .then(neighborhoods => fillNeighborhoodsHTML(neighborhoods));
-
-    DBHelper.fetchCuisines()
-        .then(cuisines => fillCuisinesHTML(cuisines));
-});
-
-/**
- * Register sw on load
- */
-window.addEventListener('load', (event) => {
     if (navigator.serviceWorker) {
         navigator.serviceWorker.register('sw.js')
             .then(reg => console.log(`sw registered, scope: ${reg.scope}`))
             .catch(err => console.error(`ERROR_REGISTERING_SW: ${err}`));
     }
+    DBHelper.fetchNeighborhoods()
+        .then(neighborhoods => fillNeighborhoodsHTML(neighborhoods));
+
+    DBHelper.fetchCuisines()
+        .then(cuisines => fillCuisinesHTML(cuisines));
+
+    //google maps fetching screwing me up have to updateRestaurant manually here
+    if (!navigator.onLine) {
+        updateRestaurants();
+    }
+});
+
+/**
+ * on load event
+ */
+window.addEventListener('load', (event) => {
 
     connectionStatusHandler = (event) => {
         const statusBox = document.getElementById('offline-status-box');
@@ -101,7 +106,9 @@ updateRestaurants = () => {
     const neighborhood = nSelect[nIndex].value;
 
     DBHelper.fetchRestaurantByCuisineAndNeighborhood(neighborhood, cuisine)
-        .then(restaurants => resetRestaurants(restaurants))
+        .then(restaurants => {
+            resetRestaurants(restaurants);
+        })
         .then(() => fillRestaurantsHTML());
 }
 
@@ -129,7 +136,9 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
         ul.append(createRestaurantHTML(restaurant));
     });
     DBHelper.lazyLoad();
-    addMarkersToMap();
+    if (navigator.onLine) {
+        addMarkersToMap();
+    }
 }
 
 /**

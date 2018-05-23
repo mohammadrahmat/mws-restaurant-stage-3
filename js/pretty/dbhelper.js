@@ -103,9 +103,11 @@ class DBHelper {
                 })
                 .catch(err => console.error(`ERR_FETCHING_RESTAURANTS: ${err}`));
         } else {
-            return DBHelper.getCachedData(DBHelper.RESTAURANT_IDB_NAME, DBHelper.RESTAURANT_IDB_STORE_NAME)
-                .then(resp => resp.json())
-                .catch(err => console.error(`ERR_FETCHING_RESTAURANTS_FROM_IDB: ${err}`));
+            return new Promise((resolve, reject) => {
+                DBHelper.getCachedData(DBHelper.RESTAURANT_IDB_NAME, DBHelper.RESTAURANT_IDB_STORE_NAME)
+                    .then(resp => resolve(resp))
+                    .catch(err => console.warn(`ERR_FETCHING_CACHED_RESTAURANTS: ${err.message}`));
+            });
         }
     }
 
@@ -181,9 +183,11 @@ class DBHelper {
                 })
                 .catch(err => console.error(`ERR_FETCHING_ALL_REVIEWS: ${err}`));
         } else {
-            return DBHelper.getCachedData(DBHelper.REVIEWS_IDB_NAME, DBHelper.REVIEWS_IDB_STORE_NAME)
-                .then(resp => resp.json)
-                .catch(err => console.error(`ERR_FETCHING_REVIEWS_FROM_IDB: ${err}`));
+            return new Promise((resolve, reject) => {
+                DBHelper.getCachedData(DBHelper.REVIEWS_IDB_NAME, DBHelper.REVIEWS_IDB_STORE_NAME)
+                    .then(resp => resolve(resp))
+                    .catch(err => console.error(`ERR_FETCHING_REVIEWS_FROM_IDB: ${err}`));
+            });
         }
     }
 
@@ -286,7 +290,9 @@ class DBHelper {
             let db = idb.result;
             let tx = db.transaction(storeName, "readwrite");
             let store = tx.objectStore(storeName);
-            let index = store.index("by-id");
+            if(!dbName == DBHelper.REVIEWS_OFFLINE_IDB_NAME) {
+                let index = store.index("by-id");
+            }
             store.put(object);
 
             tx.oncomplete = function () {
@@ -405,7 +411,7 @@ class DBHelper {
         if (!isFavorite) {
             isFavorite = false;
         }
-        fetch(this.getRestaurantByIdApiUrl(restaurant_id), {
+        fetch(DBHelper.getRestaurantByIdApiUrl(restaurant_id), {
             method: 'put',
             body: JSON.stringify({
                 is_favorite: !isFavorite
@@ -448,15 +454,16 @@ class DBHelper {
             return;
         }
 
-        return DBHelper.getCachedData(DBHelper.REVIEWS_OFFLINE_IDB_NAME, DBHelper.REVIEWS_OFFLINE_STORE_NAME)
-            .then(resp => resp.json())
-            .then(reviews => {
-                reviews.forEach(review => {
-                    DBHelper.postReview(review)
-                        .then(rev => console.log(`SAVED_REVIEW: ${rev}`));
+        return new Promise((resolve, reject) => {
+            DBHelper.getCachedData(DBHelper.REVIEWS_OFFLINE_IDB_NAME, DBHelper.REVIEWS_OFFLINE_STORE_NAME)
+                .then(reviews => {
+                    reviews.forEach(review => {
+                        DBHelper.postReview(review)
+                            .then(rev => console.log(`SAVED_REVIEW: ${rev}`));
+                    })
                 })
-            })
-            .then(() => DBHelper.clearStore(DBHelper.REVIEWS_OFFLINE_IDB_NAME, DBHelper.REVIEWS_OFFLINE_STORE_NAME))
-            .catch(err => console.error(`ERROR_SAVING_CACHED_REVIEWS: ${err}`));
+                .then(() => DBHelper.clearStore(DBHelper.REVIEWS_OFFLINE_IDB_NAME, DBHelper.REVIEWS_OFFLINE_STORE_NAME))
+                .catch(err => console.error(`ERROR_SAVING_CACHED_REVIEWS: ${err}`));
+        });
     }
 }
