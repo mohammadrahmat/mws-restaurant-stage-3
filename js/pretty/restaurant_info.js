@@ -191,6 +191,7 @@ reviewFormHandler = (restaurant = self.restaurant) => {
         updatedAt: +new Date(),
         restaurant_id: restaurant.id
     };
+    addReviewHTML(review);
     if (navigator.onLine) {
         DBHelper.postReview(review)
             .then(resp => {
@@ -199,7 +200,6 @@ reviewFormHandler = (restaurant = self.restaurant) => {
                 } else {
                     document.getElementById('form-legend').innerHTML = 'Your Review Has Been Saved, Thank You For Sharing Your Thoughts.';
                     document.getElementById('reviews-form').reset();
-                    addReviewHTML(resp);
                 }
             })
             .catch(err => console.error(`ERROR_SAVING_REVIEW: ${err}`));

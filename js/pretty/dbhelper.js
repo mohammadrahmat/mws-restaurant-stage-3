@@ -199,6 +199,11 @@ class DBHelper {
         return DBHelper.fetchReviews()
             .then(reviews => reviews.filter(r => r.restaurant_id == restaurant_id))
             .then(result => {
+                if (navigator.onLine) {
+                    return fetch(DBHelper.RESTAURANT_REVIEWS_API)
+                        .then(resp => resp.json())
+                        .catch(err => console.err(`ERR_FETCHING_REVIEW: ${err}`));
+                }
                 return result;
             })
             .catch(err => console.error(`ERR_FETCH_REVIEWS_BY_RESTAURANT_ID: ${err}`));
@@ -278,8 +283,21 @@ class DBHelper {
 
         idb.onupgradeneeded = function () {
             let db = idb.result;
-            let store = db.createObjectStore(storeName, { keyPath: "id" });
-            let index = store.createIndex("by-id", "id");
+            let options = {
+                keyPath: "id"
+            };
+            if (dbName == DBHelper.REVIEWS_OFFLINE_IDB_NAME) {
+                options = {
+                    keyPath: undefined,
+                    unique: false,
+                    autoIncrement: false
+                };
+                let store = db.createObjectStore(storeName, options);
+            } else {
+                let store = db.createObjectStore(storeName, options);
+                let index = store.createIndex("by-id", "id");
+            }
+
         };
 
         idb.onerror = function (err) {
@@ -290,10 +308,14 @@ class DBHelper {
             let db = idb.result;
             let tx = db.transaction(storeName, "readwrite");
             let store = tx.objectStore(storeName);
-            if(!dbName == DBHelper.REVIEWS_OFFLINE_IDB_NAME) {
+
+            if (dbName == DBHelper.REVIEWS_OFFLINE_IDB_NAME) {
+                store.put(object, 1);
+            } else {
                 let index = store.index("by-id");
+                store.put(object);
             }
-            store.put(object);
+
 
             tx.oncomplete = function () {
                 db.close();
@@ -459,7 +481,11 @@ class DBHelper {
                 .then(reviews => {
                     reviews.forEach(review => {
                         DBHelper.postReview(review)
-                            .then(rev => console.log(`SAVED_REVIEW: ${rev}`));
+                            .then(rev => {
+                                document.getElementById('form-legend').innerHTML = 'Your Review Has Been Saved, Thank You For Sharing Your Thoughts.';
+                                document.getElementById('reviews-form').reset();
+                                console.log(`SAVED_REVIEW: ${rev}`)
+                            });
                     })
                 })
                 .then(() => DBHelper.clearStore(DBHelper.REVIEWS_OFFLINE_IDB_NAME, DBHelper.REVIEWS_OFFLINE_STORE_NAME))
